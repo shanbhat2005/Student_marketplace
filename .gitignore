@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Environment variables (keep MongoDB credentials secret)
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+
+# System files
+.DS_Store
+Thumbs.db
