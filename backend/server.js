@@ -40,7 +40,10 @@ mongoose.connection.on('error', (err) => {
 
 // Routes
 const bookRoutes = require('./routes/bookRoutes');
+const authRoutes = require('./routes/authRoutes');
+
 app.use('/api/books', bookRoutes);
+app.use('/api/auth', authRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
