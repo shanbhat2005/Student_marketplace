@@ -119,6 +119,62 @@
   color: #6ee7b7;
 }
 
+.home-card {
+  max-width: 960px;
+}
+
+.home-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.home-header h2 {
+  text-align: left;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.book-card {
+  background-color: #020617;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.book-card h3 {
+  margin: 0;
+}
+
+.book-author {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.book-meta {
+  margin: 0.15rem 0;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+.book-price {
+  margin: 0.25rem 0 0.5rem;
+  font-weight: 600;
+  color: #a5b4fc;
+}
+
 @media (min-width: 640px) {
   .auth-card {
     padding: 3rem 2.5rem;
@@ -132,5 +188,14 @@
   .landing-buttons .primary-btn,
   .landing-buttons .secondary-btn {
     width: 48%;
+  }
+
+  .home-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .books-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

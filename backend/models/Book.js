@@ -3,34 +3,37 @@ const mongoose = require('mongoose');
 const bookSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
   },
-  description: {
-    type: String
+  author: {
+    type: String,
+    required: true,
+    trim: true,
   },
   price: {
     type: Number,
-    required: true
+    required: true,
+    min: 0,
   },
   semester: {
     type: Number,
-    min: 1,
-    max: 6
+    required: true,
   },
   condition: {
     type: String,
-    enum: ['Good', 'Like New', 'Fair', 'Poor']
+    enum: ['New', 'Used'],
+    required: true,
   },
-  imageURL: {
-    type: String
-  },
-  sellerName: {
-    type: String
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model('Book', bookSchema);

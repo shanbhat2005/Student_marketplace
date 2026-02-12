@@ -2,38 +2,48 @@ const express = require('express');
 const router = express.Router();
 const Book = require('../models/Book');
 
-// POST route to create a new book
-router.post('/', async (req, res) => {
+// POST /add - Add a new book
+router.post('/add', async (req, res) => {
   try {
-    const book = new Book(req.body);
+    const { title, author, price, semester, condition, owner } = req.body;
+
+    if (!title || !author || price == null || !semester || !condition || !owner) {
+      return res
+        .status(400)
+        .json({ message: 'title, author, price, semester, condition, and owner are required.' });
+    }
+
+    const book = new Book({ title, author, price, semester, condition, owner });
     const savedBook = await book.save();
-    res.status(201).json(savedBook);
+
+    return res.status(201).json({
+      message: 'Book added successfully.',
+      book: savedBook,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('Error adding book:', error);
+    return res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
-// GET route to fetch all books
+// Existing routes (optional): list and filter books
 router.get('/', async (req, res) => {
   try {
-    const books = await Book.find().sort({ createdAt: -1 });
+    const books = await Book.find().sort({ createdAt: -1 }).populate('owner', 'name email');
     res.json(books);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
-// GET route to fetch books by semester
 router.get('/semester/:semester', async (req, res) => {
   try {
-    const semester = parseInt(req.params.semester);
-    if (semester < 1 || semester > 6) {
-      return res.status(400).json({ error: 'Semester must be between 1 and 6' });
-    }
-    const books = await Book.find({ semester: semester }).sort({ createdAt: -1 });
+    const semester = parseInt(req.params.semester, 10);
+
+    const books = await Book.find({ semester }).sort({ createdAt: -1 }).populate('owner', 'name email');
     res.json(books);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 

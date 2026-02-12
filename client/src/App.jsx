@@ -2,6 +2,8 @@ import { Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import AddBook from './pages/AddBook';
+import Home from './pages/Home';
 
 const LandingPage = () => {
   return (
@@ -24,19 +26,6 @@ const LandingPage = () => {
   );
 };
 
-const Home = () => {
-  return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h2>Welcome to BCA Books Home</h2>
-        <p className="auth-subtitle">
-          You are logged in. Next, we can list and manage your books here.
-        </p>
-      </div>
-    </div>
-  );
-};
-
 function App() {
   return (
     <Routes>
@@ -44,6 +33,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/add-book" element={<AddBook />} />
     </Routes>
   );
 }
