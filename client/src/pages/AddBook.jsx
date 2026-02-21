@@ -34,8 +34,6 @@ const AddBook = () => {
         price: Number(formData.price),
         semester: Number(formData.semester),
         condition: formData.condition,
-        // TODO: Replace with actual logged-in user ID from auth context or token
-        owner: formData.owner || 'REPLACE_WITH_USER_ID',
       };
 
       await axios.post('http://localhost:5000/api/books/add', payload);

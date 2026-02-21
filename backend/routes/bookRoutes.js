@@ -7,13 +7,15 @@ router.post('/add', async (req, res) => {
   try {
     const { title, author, price, semester, condition, owner } = req.body;
 
-    if (!title || !author || price == null || !semester || !condition || !owner) {
+    if (!title || !author || price == null || !semester || !condition) {
       return res
         .status(400)
-        .json({ message: 'title, author, price, semester, condition, and owner are required.' });
+        .json({ message: 'title, author, price, semester, and condition are required.' });
     }
 
-    const book = new Book({ title, author, price, semester, condition, owner });
+    const bookData = { title, author, price, semester, condition };
+    if (owner) bookData.owner = owner;
+    const book = new Book(bookData);
     const savedBook = await book.save();
 
     return res.status(201).json({
