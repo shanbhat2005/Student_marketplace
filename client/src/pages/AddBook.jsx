@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '../api/axios';
 import '../App.css';
 
 const AddBook = () => {
@@ -36,7 +36,7 @@ const AddBook = () => {
         condition: formData.condition,
       };
 
-      await axios.post('http://localhost:5000/api/books/add', payload);
+      await api.post('/api/books/add', payload);
       alert('Book Listed Successfully!');
       navigate('/home');
     } catch (err) {

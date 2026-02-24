@@ -1,7 +1,6 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import './App.css';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+import Auth from './pages/Auth';
 import AddBook from './pages/AddBook';
 import Home from './pages/Home';
 
@@ -14,10 +13,10 @@ const LandingPage = () => {
           Buy and sell BCA semester books easily with your classmates.
         </p>
         <div className="landing-buttons">
-          <Link to="/login" className="primary-btn">
+          <Link to="/auth" className="primary-btn">
             Login
           </Link>
-          <Link to="/signup" className="secondary-btn">
+          <Link to="/auth" className="secondary-btn">
             Sign Up
           </Link>
         </div>
@@ -30,8 +29,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path="/auth" element={<Auth />} />
       <Route path="/home" element={<Home />} />
       <Route path="/add-book" element={<AddBook />} />
     </Routes>

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '../api/axios';
 import '../App.css';
+import Loader from '../components/Loader';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,17 +22,18 @@ const Login = () => {
     setSuccess('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const res = await api.post('/api/auth/login', formData);
       setSuccess(res.data.message || 'Login successful');
       setTimeout(() => {
         navigate('/home');
-      }, 800);
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
-    } finally {
       setLoading(false);
     }
   };
+
+  if (loading) return <Loader />;
 
   return (
     <div className="auth-page">
