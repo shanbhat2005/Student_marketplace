@@ -24,8 +24,28 @@ const Home = () => {
     fetchBooks();
   }, []);
 
-  const handleBuyNow = (title) => {
-    alert(`Buy flow coming soon for "${title}"`);
+  const handleBuyNow = async (bookId, title) => {
+    const buyerEmail = window.prompt(`Please enter your email to confirm purchase of "${title}".\n\nThe seller will contact you to arrange payment and delivery!`);
+    
+    if (!buyerEmail) return;
+    if (!buyerEmail.includes('@')) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await api.post(`/api/books/${bookId}/buy`, { buyerEmail });
+      alert(res.data.message || 'Purchase successful! Please check your email inbox.');
+      
+      // Remove the book from the page instantly
+      setBooks((prevBooks) => prevBooks.filter((b) => b._id !== bookId));
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || 'Failed to process purchase. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -63,7 +83,7 @@ const Home = () => {
                 <button
                   type="button"
                   className="primary-btn full-width"
-                  onClick={() => handleBuyNow(book.title)}
+                  onClick={() => handleBuyNow(book._id, book.title)}
                 >
                   Buy Now
                 </button>
