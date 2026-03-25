@@ -29,7 +29,7 @@ const Auth = () => {
     setError('');
     try {
       await api.post('/api/auth/login', loginData);
-      setTimeout(() => navigate('/home'), 2000);
+      navigate('/home');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
       setLoading(false);
@@ -42,7 +42,7 @@ const Auth = () => {
     setError('');
     try {
       await api.post('/api/auth/signup', signupData);
-      setTimeout(() => navigate('/home'), 2000);
+      navigate('/home');
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed. Please try again.');
       setLoading(false);

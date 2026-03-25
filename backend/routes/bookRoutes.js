@@ -116,4 +116,37 @@ router.delete('/admin/:id', async (req, res) => {
   }
 });
 
+// PUT /admin/:id - Admin edit a book
+router.put('/admin/:id', upload.single('image'), async (req, res) => {
+  try {
+    const { adminSecret, title, author, price, semester, course } = req.body;
+    const requiredSecret = process.env.ADMIN_SECRET || 'admin123';
+
+    if (!adminSecret || adminSecret !== requiredSecret) {
+      return res.status(401).json({ message: 'Unauthorized: Invalid Admin Secret.' });
+    }
+
+    const updateData = {};
+    if (title) updateData.title = title;
+    if (author) updateData.author = author;
+    if (price) updateData.price = Number(price);
+    if (semester) updateData.semester = Number(semester);
+    if (course) updateData.course = course;
+    
+    if (req.file) {
+      updateData.imageUrl = '/uploads/' + req.file.filename;
+    }
+
+    const book = await Book.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found.' });
+    }
+
+    res.json({ message: 'Book updated successfully.', book });
+  } catch (error) {
+    console.error('Error admin updating book:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 module.exports = router;
