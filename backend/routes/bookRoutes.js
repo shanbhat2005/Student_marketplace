@@ -1,20 +1,39 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/Book');
+const multer = require('multer');
+const path = require('path');
 
+// Multer config
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../uploads'));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
 
 // POST /add - Add a new book
-router.post('/add', async (req, res) => {
+router.post('/add', upload.single('image'), async (req, res) => {
   try {
-    const { title, author, price, semester, condition, owner } = req.body;
+    const { title, author, price, semester, condition, course, owner } = req.body;
 
-    if (!title || !author || price == null || !semester || !condition) {
-      return res
-        .status(400)
-        .json({ message: 'title, author, price, semester, and condition are required.' });
+    let imageUrl = '';
+    if (req.file) {
+      imageUrl = '/uploads/' + req.file.filename;
     }
 
-    const bookData = { title, author, price, semester, condition };
+    if (!title || !author || price == null || !semester || !condition || !course) {
+      return res
+        .status(400)
+        .json({ message: 'title, author, price, semester, condition, and course are required.' });
+    }
+
+    const bookData = { title, author, price, semester, condition, course };
+    if (imageUrl) bookData.imageUrl = imageUrl;
     if (owner) bookData.owner = owner;
     const book = new Book(bookData);
     const savedBook = await book.save();
@@ -72,6 +91,28 @@ router.post('/:id/buy', async (req, res) => {
   } catch (error) {
     console.error('Error processing purchase:', error);
     res.status(500).json({ message: 'Server error processing purchase', error: error.message });
+  }
+});
+
+// DELETE /admin/:id - Admin delete a book
+router.delete('/admin/:id', async (req, res) => {
+  try {
+    const { adminSecret } = req.body;
+    const requiredSecret = process.env.ADMIN_SECRET || 'admin123';
+
+    if (!adminSecret || adminSecret !== requiredSecret) {
+      return res.status(401).json({ message: 'Unauthorized: Invalid Admin Secret.' });
+    }
+
+    const book = await Book.findByIdAndDelete(req.params.id);
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found.' });
+    }
+
+    res.json({ message: 'Book deleted successfully.' });
+  } catch (error) {
+    console.error('Error admin deleting book:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 

@@ -11,7 +11,9 @@ const AddBook = () => {
     price: '',
     semester: '1',
     condition: 'New',
+    course: 'BCA',
   });
+  const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -22,21 +24,35 @@ const AddBook = () => {
     });
   };
 
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      const payload = {
-        title: formData.title,
-        author: formData.author,
-        price: Number(formData.price),
-        semester: Number(formData.semester),
-        condition: formData.condition,
-      };
+      const payload = new FormData();
+      payload.append('title', formData.title);
+      payload.append('author', formData.author);
+      payload.append('price', Number(formData.price));
+      payload.append('semester', Number(formData.semester));
+      payload.append('condition', formData.condition);
+      payload.append('course', formData.course);
+      
+      if (imageFile) {
+        payload.append('image', imageFile);
+      }
 
-      await api.post('/api/books/add', payload);
+      await api.post('/api/books/add', payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       alert('Book Listed Successfully!');
       navigate('/home');
     } catch (err) {
@@ -89,6 +105,19 @@ const AddBook = () => {
           </label>
 
           <label>
+            Course
+            <select
+              name="course"
+              value={formData.course}
+              onChange={handleChange}
+              required
+            >
+              <option value="BCA">BCA</option>
+              <option value="BBA">BBA</option>
+            </select>
+          </label>
+
+          <label>
             Semester
             <select
               name="semester"
@@ -116,6 +145,18 @@ const AddBook = () => {
               <option value="New">New</option>
               <option value="Used">Used</option>
             </select>
+          </label>
+
+          <label>
+            Book Image (Optional)
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileChange}
+              style={{ padding: '0.5rem', cursor: 'pointer' }}
+            />
           </label>
 
           {error && <p className="auth-error">{error}</p>}

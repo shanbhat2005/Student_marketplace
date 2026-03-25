@@ -1,12 +1,23 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../api/axios';
+import API_BASE_URL, { api } from '../api/axios';
 import '../App.css';
+import FilterDropdown from '../components/FilterDropdown';
 
 const Home = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const [selectedCourse, setSelectedCourse] = useState('');
+  const [selectedSemester, setSelectedSemester] = useState('');
+
+  const filteredBooks = books.filter(book => {
+    const bookCourse = book.course || 'BCA';
+    const matchCourse = selectedCourse ? bookCourse === selectedCourse : true;
+    const matchSemester = selectedSemester ? book.semester.toString() === selectedSemester.toString() : true;
+    return matchCourse && matchSemester;
+  });
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -53,14 +64,29 @@ const Home = () => {
       <div className="auth-card home-card">
         <div className="home-header">
           <div>
-            <h2>BCA Books Marketplace</h2>
+            <h2>BCA & BBA Books Marketplace</h2>
             <p className="auth-subtitle">
-              Browse second-hand BCA books listed by your classmates.
+              Browse second-hand course books listed by your classmates.
             </p>
           </div>
           <Link to="/add-book" className="primary-btn">
             Sell a Book
           </Link>
+        </div>
+
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+          <FilterDropdown 
+            title="Course" 
+            options={['BCA', 'BBA']} 
+            selected={selectedCourse} 
+            onSelect={setSelectedCourse} 
+          />
+          <FilterDropdown 
+            title="Semester" 
+            options={['1', '2', '3', '4', '5', '6']} 
+            selected={selectedSemester} 
+            onSelect={setSelectedSemester} 
+          />
         </div>
 
         {loading && <p className="auth-subtitle">Loading books...</p>}
@@ -70,10 +96,21 @@ const Home = () => {
           <p className="auth-subtitle">No books listed yet. Be the first to sell a book!</p>
         )}
 
-        {!loading && !error && books.length > 0 && (
+        {!loading && !error && books.length > 0 && filteredBooks.length === 0 && (
+          <p className="auth-subtitle">No books match your selected filters.</p>
+        )}
+
+        {!loading && !error && filteredBooks.length > 0 && (
           <div className="books-grid">
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
               <div key={book._id} className="book-card">
+                {book.imageUrl && (
+                  <img 
+                    src={`${API_BASE_URL}${book.imageUrl}`} 
+                    alt={book.title} 
+                    style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '0.5rem', marginBottom: '0.5rem' }} 
+                  />
+                )}
                 <h3>{book.title}</h3>
                 <p className="book-author">by {book.author}</p>
                 <p className="book-meta">

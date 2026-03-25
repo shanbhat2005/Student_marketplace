@@ -20,6 +20,16 @@ const bookSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  course: {
+    type: String,
+    enum: ['BCA', 'BBA'],
+    required: true,
+    default: 'BCA'
+  },
+  imageUrl: {
+    type: String,
+    required: false,
+  },
   condition: {
     type: String,
     enum: ['New', 'Used'],

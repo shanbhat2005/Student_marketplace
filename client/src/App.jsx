@@ -3,6 +3,7 @@ import './App.css';
 import Auth from './pages/Auth';
 import AddBook from './pages/AddBook';
 import Home from './pages/Home';
+import Admin from './pages/Admin';
 
 const LandingPage = () => {
   return (
@@ -16,7 +17,7 @@ const LandingPage = () => {
           <Link to="/auth" className="primary-btn">
             Login
           </Link>
-          <Link to="/auth" className="secondary-btn">
+          <Link to="/auth" state={{ isSignUp: true }} className="secondary-btn">
             Sign Up
           </Link>
         </div>
@@ -32,6 +33,7 @@ function App() {
       <Route path="/auth" element={<Auth />} />
       <Route path="/home" element={<Home />} />
       <Route path="/add-book" element={<AddBook />} />
+      <Route path="/admin" element={<Admin />} />
     </Routes>
   );
 }
