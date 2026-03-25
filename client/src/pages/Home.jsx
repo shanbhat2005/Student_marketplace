@@ -36,17 +36,20 @@ const Home = () => {
   }, []);
 
   const handleBuyNow = async (bookId, title) => {
-    const buyerEmail = window.prompt(`Please enter your email to confirm purchase of "${title}".\n\nThe seller will contact you to arrange payment and delivery!`);
+    if (!window.confirm(`Confirm purchase of "${title}"?\n\nThe seller will email you.`)) return;
+
+    const userStr = localStorage.getItem('user');
+    const user = userStr ? JSON.parse(userStr) : null;
     
-    if (!buyerEmail) return;
-    if (!buyerEmail.includes('@')) {
-      alert("Please enter a valid email address.");
+    if (!user) {
+      alert("Session expired. Please log in again.");
+      window.location.href = '/auth';
       return;
     }
 
     try {
       setLoading(true);
-      const res = await api.post(`/api/books/${bookId}/buy`, { buyerEmail });
+      const res = await api.post(`/api/books/${bookId}/buy`, { buyerEmail: user.email, buyerId: user._id });
       alert(res.data.message || 'Purchase successful! Please check your email inbox.');
       
       // Remove the book from the page instantly

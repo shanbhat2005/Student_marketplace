@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/Book');
+const Order = require('../models/Order');
 const multer = require('multer');
 const path = require('path');
 
@@ -73,7 +74,7 @@ router.get('/semester/:semester', async (req, res) => {
 router.post('/:id/buy', async (req, res) => {
   try {
     const bookId = req.params.id;
-    const { buyerEmail } = req.body;
+    const { buyerEmail, buyerId } = req.body;
 
     if (!buyerEmail) {
       return res.status(400).json({ message: 'Buyer email is required.' });
@@ -83,6 +84,17 @@ router.post('/:id/buy', async (req, res) => {
     
     if (!book) {
       return res.status(404).json({ message: 'Book not found or already sold.' });
+    }
+
+    if (buyerId) {
+      const order = new Order({
+        buyer: buyerId,
+        bookTitle: book.title,
+        bookAuthor: book.author,
+        price: book.price,
+        sellerEmail: book.owner ? book.owner.email : process.env.EMAIL_USER
+      });
+      await order.save();
     }
 
     await Book.findByIdAndDelete(bookId);

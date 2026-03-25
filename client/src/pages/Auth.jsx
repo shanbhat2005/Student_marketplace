@@ -28,7 +28,8 @@ const Auth = () => {
     setLoading(true);
     setError('');
     try {
-      await api.post('/api/auth/login', loginData);
+      const res = await api.post('/api/auth/login', loginData);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
       navigate('/home');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
@@ -41,7 +42,8 @@ const Auth = () => {
     setLoading(true);
     setError('');
     try {
-      await api.post('/api/auth/signup', signupData);
+      const res = await api.post('/api/auth/signup', signupData);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
       navigate('/home');
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed. Please try again.');

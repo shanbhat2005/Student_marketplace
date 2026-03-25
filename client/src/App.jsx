@@ -4,6 +4,9 @@ import Auth from './pages/Auth';
 import AddBook from './pages/AddBook';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
+import Dashboard from './pages/Dashboard';
+import ProtectedRoute from './components/ProtectedRoute';
+import Navbar from './components/Navbar';
 
 const LandingPage = () => {
   return (
@@ -28,13 +31,17 @@ const LandingPage = () => {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/auth" element={<Auth />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/add-book" element={<AddBook />} />
-      <Route path="/admin" element={<Admin />} />
-    </Routes>
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/add-book" element={<ProtectedRoute><AddBook /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </>
   );
 }
 
