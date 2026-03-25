@@ -16,6 +16,7 @@
   width: 100%;
   max-width: 420px;
   margin-bottom: 1rem;
+  perspective: 1000px;
 }
 
 .toggle {
@@ -65,8 +66,8 @@
   position: relative;
   width: 100%;
   max-width: 420px;
-  min-height: 380px;
-  transition: transform 0.6s;
+  min-height: 480px;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
 }
 
@@ -77,13 +78,15 @@
 .flip-card__front,
 .flip-card__back {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  min-height: 380px;
+  min-height: 480px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   background-color: #0b1120;
   border-radius: 1rem;
-  padding: 2.5rem 2rem;
+  padding: 1.5rem 1rem;
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.8);
   color: #e5e7eb;
 }
@@ -102,4 +105,11 @@
 .flip-card__front .auth-form,
 .flip-card__back .auth-form {
   margin-top: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .flip-card__front,
+  .flip-card__back {
+    padding: 2.5rem 2rem;
+  }
 }

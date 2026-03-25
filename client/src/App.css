@@ -12,7 +12,7 @@
   max-width: 420px;
   background-color: #0b1120;
   border-radius: 1rem;
-  padding: 2.5rem 2rem;
+  padding: 1.5rem 1rem;
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.8);
   color: #e5e7eb;
 }
@@ -44,7 +44,8 @@
   gap: 0.4rem;
 }
 
-.auth-form input {
+.auth-form input,
+.auth-form select {
   padding: 0.7rem 0.8rem;
   border-radius: 0.5rem;
   border: 1px solid #374151;
@@ -53,7 +54,8 @@
   font-size: 0.95rem;
 }
 
-.auth-form input:focus {
+.auth-form input:focus,
+.auth-form select:focus {
   outline: none;
   border-color: #6366f1;
   box-shadow: 0 0 0 1px #6366f1;
