@@ -48,7 +48,7 @@ const Home = () => {
     setConfirmModal({ isOpen: true, bookId, title });
   };
 
-  const confirmPurchase = async () => {
+  const confirmPurchase = async (contactEmail) => {
     const { bookId, title } = confirmModal;
     setConfirmModal({ isOpen: false, bookId: null, title: '' });
     
@@ -59,7 +59,7 @@ const Home = () => {
 
     try {
       setLoading(true);
-      const res = await api.post(`/api/books/${bookId}/buy`, { buyerEmail: user.email, buyerId: user._id });
+      const res = await api.post(`/api/books/${bookId}/buy`, { buyerEmail: contactEmail, buyerId: user._id });
       alert(res.data.message || 'Purchase successful! Check your notifications.');
       
       setBooks((prevBooks) => prevBooks.filter((b) => b._id !== bookId));

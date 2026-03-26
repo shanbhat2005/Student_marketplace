@@ -4,6 +4,18 @@ const Book = require('../models/Book');
 const Order = require('../models/Order');
 const multer = require('multer');
 const path = require('path');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+});
 
 // Multer config
 const storage = multer.diskStorage({
@@ -111,7 +123,25 @@ router.post('/:id/buy', async (req, res) => {
           message: `Great news! Your book "${book.title}" was purchased. Please contact ${buyerEmail} to arrange delivery.`
         });
         await sellerNotification.save();
+        
+        // Send actual email to seller
+        if (book.owner.email) {
+          await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: book.owner.email,
+            subject: '📚 Your book has been sold!',
+            text: `Great news!\n\nSomeone just purchased your listed book: "${book.title}".\n\nPlease contact the buyer at ${buyerEmail} to arrange the delivery and payment.\n\nThank you for using BCA Books Marketplace!`
+          }).catch(err => console.error("Failed to send seller email", err));
+        }
       }
+      
+      // Send actual email to buyer
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: buyerEmail,
+        subject: '📚 Purchase Confirmation',
+        text: `Hello,\n\nYour order for "${book.title}" has been confirmed!\n\nThe seller has been notified and should contact you soon. If they provided their email, you can also reach out to them (Seller Email: ${book.owner?.email || 'N/A'}).\n\nThank you for using BCA Books Marketplace!`
+      }).catch(err => console.error("Failed to send buyer email", err));
     }
 
     book.isSold = true;
