@@ -52,7 +52,7 @@ router.post('/add', upload.single('image'), async (req, res) => {
 // Existing routes (optional): list and filter books
 router.get('/', async (req, res) => {
   try {
-    const books = await Book.find().sort({ createdAt: -1 }).populate('owner', 'name email');
+    const books = await Book.find({ isSold: { $ne: true } }).sort({ createdAt: -1 }).populate('owner', 'name email');
     res.json(books);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -63,7 +63,7 @@ router.get('/semester/:semester', async (req, res) => {
   try {
     const semester = parseInt(req.params.semester, 10);
 
-    const books = await Book.find({ semester }).sort({ createdAt: -1 }).populate('owner', 'name email');
+    const books = await Book.find({ semester, isSold: { $ne: true } }).sort({ createdAt: -1 }).populate('owner', 'name email');
     res.json(books);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -82,7 +82,7 @@ router.post('/:id/buy', async (req, res) => {
 
     const book = await Book.findById(bookId).populate('owner');
     
-    if (!book) {
+    if (!book || book.isSold) {
       return res.status(404).json({ message: 'Book not found or already sold.' });
     }
 
@@ -95,9 +95,27 @@ router.post('/:id/buy', async (req, res) => {
         sellerEmail: book.owner ? book.owner.email : process.env.EMAIL_USER
       });
       await order.save();
+      
+      const Notification = require('../models/Notification');
+      // Notify the buyer
+      const buyerNotification = new Notification({
+        user: buyerId,
+        message: `You successfully purchased "${book.title}".`
+      });
+      await buyerNotification.save();
+      
+      // Notify the seller
+      if (book.owner) {
+        const sellerNotification = new Notification({
+          user: book.owner._id,
+          message: `Great news! Your book "${book.title}" was purchased. Please contact ${buyerEmail} to arrange delivery.`
+        });
+        await sellerNotification.save();
+      }
     }
 
-    await Book.findByIdAndDelete(bookId);
+    book.isSold = true;
+    await book.save();
 
     res.json({ message: 'Purchase successful!' });
   } catch (error) {

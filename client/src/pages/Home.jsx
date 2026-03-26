@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import API_BASE_URL, { api } from '../api/axios';
 import '../App.css';
 import FilterDropdown from '../components/FilterDropdown';
+import ConfirmModal from '../components/ConfirmModal';
 
 const Home = () => {
   const [books, setBooks] = useState([]);
@@ -11,6 +12,8 @@ const Home = () => {
 
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedSemester, setSelectedSemester] = useState('');
+  
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, bookId: null, title: '' });
 
   const filteredBooks = books.filter(book => {
     const bookCourse = book.course || 'BCA';
@@ -35,24 +38,30 @@ const Home = () => {
     fetchBooks();
   }, []);
 
-  const handleBuyNow = async (bookId, title) => {
-    if (!window.confirm(`Confirm purchase of "${title}"?\n\nThe seller will email you.`)) return;
-
+  const handleBuyNowClick = (bookId, title) => {
     const userStr = localStorage.getItem('user');
-    const user = userStr ? JSON.parse(userStr) : null;
-    
-    if (!user) {
+    if (!userStr) {
       alert("Session expired. Please log in again.");
       window.location.href = '/auth';
       return;
     }
+    setConfirmModal({ isOpen: true, bookId, title });
+  };
+
+  const confirmPurchase = async () => {
+    const { bookId, title } = confirmModal;
+    setConfirmModal({ isOpen: false, bookId: null, title: '' });
+    
+    const userStr = localStorage.getItem('user');
+    const user = userStr ? JSON.parse(userStr) : null;
+    
+    if (!user) return;
 
     try {
       setLoading(true);
       const res = await api.post(`/api/books/${bookId}/buy`, { buyerEmail: user.email, buyerId: user._id });
-      alert(res.data.message || 'Purchase successful! Please check your email inbox.');
+      alert(res.data.message || 'Purchase successful! Check your notifications.');
       
-      // Remove the book from the page instantly
       setBooks((prevBooks) => prevBooks.filter((b) => b._id !== bookId));
     } catch (err) {
       console.error(err);
@@ -123,7 +132,7 @@ const Home = () => {
                 <button
                   type="button"
                   className="primary-btn full-width"
-                  onClick={() => handleBuyNow(book._id, book.title)}
+                  onClick={() => handleBuyNowClick(book._id, book.title)}
                 >
                   Buy Now
                 </button>
@@ -131,6 +140,14 @@ const Home = () => {
             ))}
           </div>
         )}
+
+        <ConfirmModal 
+          isOpen={confirmModal.isOpen} 
+          title="Confirm Purchase" 
+          message={`Are you sure you want to buy "${confirmModal.title}"?`}
+          onConfirm={confirmPurchase}
+          onCancel={() => setConfirmModal({ isOpen: false, bookId: null, title: '' })}
+        />
       </div>
     </div>
   );

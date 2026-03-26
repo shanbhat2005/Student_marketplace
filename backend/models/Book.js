@@ -35,6 +35,10 @@ const bookSchema = new mongoose.Schema({
     enum: ['New', 'Used'],
     required: true,
   },
+  isSold: {
+    type: Boolean,
+    default: false,
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
