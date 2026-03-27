@@ -10,6 +10,14 @@ const orderSchema = new mongoose.Schema({
   bookAuthor: String,
   price: Number,
   sellerEmail: String,
+  seller: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  book: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Book'
+  },
   createdAt: {
     type: Date,
     default: Date.now

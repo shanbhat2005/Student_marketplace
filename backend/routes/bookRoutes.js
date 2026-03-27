@@ -32,7 +32,7 @@ const upload = multer({ storage: storage });
 // POST /add - Add a new book
 router.post('/add', upload.single('image'), async (req, res) => {
   try {
-    const { title, author, price, semester, condition, course, owner } = req.body;
+    const { title, author, price, semester, condition, course, owner, contactEmail } = req.body;
 
     let imageUrl = '';
     if (req.file) {
@@ -48,6 +48,7 @@ router.post('/add', upload.single('image'), async (req, res) => {
     const bookData = { title, author, price, semester, condition, course };
     if (imageUrl) bookData.imageUrl = imageUrl;
     if (owner) bookData.owner = owner;
+    if (contactEmail) bookData.contactEmail = contactEmail;
     const book = new Book(bookData);
     const savedBook = await book.save();
 
@@ -64,7 +65,21 @@ router.post('/add', upload.single('image'), async (req, res) => {
 // Existing routes (optional): list and filter books
 router.get('/', async (req, res) => {
   try {
-    const books = await Book.find({ isSold: { $ne: true } }).sort({ createdAt: -1 }).populate('owner', 'name email');
+    const { search, condition } = req.query;
+    let query = { isSold: { $ne: true } };
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { author: { $regex: search, $options: 'i' } }
+      ];
+    }
+    
+    if (condition) {
+      query.condition = condition;
+    }
+
+    const books = await Book.find(query).sort({ createdAt: -1 }).populate('owner', 'name email');
     res.json(books);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -78,6 +93,16 @@ router.get('/semester/:semester', async (req, res) => {
     const books = await Book.find({ semester, isSold: { $ne: true } }).sort({ createdAt: -1 }).populate('owner', 'name email');
     res.json(books);
   } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// GET /mine/:userId - Books owned by user
+router.get('/mine/:userId', async (req, res) => {
+  try {
+    const books = await Book.find({ owner: req.params.userId }).sort({ createdAt: -1 });
+    res.json(books);
+  } catch(error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
@@ -99,12 +124,15 @@ router.post('/:id/buy', async (req, res) => {
     }
 
     if (buyerId) {
+      const actualSellerEmail = book.contactEmail || (book.owner ? book.owner.email : process.env.EMAIL_USER);
       const order = new Order({
         buyer: buyerId,
         bookTitle: book.title,
         bookAuthor: book.author,
         price: book.price,
-        sellerEmail: book.owner ? book.owner.email : process.env.EMAIL_USER
+        sellerEmail: actualSellerEmail,
+        seller: book.owner ? book.owner._id : undefined,
+        book: book._id
       });
       await order.save();
       
@@ -125,10 +153,11 @@ router.post('/:id/buy', async (req, res) => {
         await sellerNotification.save();
         
         // Send actual email to seller
-        if (book.owner.email) {
+        const notifyEmail = book.contactEmail || book.owner.email;
+        if (notifyEmail) {
           await transporter.sendMail({
             from: process.env.EMAIL_USER,
-            to: book.owner.email,
+            to: notifyEmail,
             subject: '📚 Your book has been sold!',
             text: `Great news!\n\nSomeone just purchased your listed book: "${book.title}".\n\nPlease contact the buyer at ${buyerEmail} to arrange the delivery and payment.\n\nThank you for using BCA Books Marketplace!`
           }).catch(err => console.error("Failed to send seller email", err));
@@ -136,11 +165,12 @@ router.post('/:id/buy', async (req, res) => {
       }
       
       // Send actual email to buyer
+      const displaySellerEmail = book.contactEmail || (book.owner ? book.owner.email : 'N/A');
       await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: buyerEmail,
         subject: '📚 Purchase Confirmation',
-        text: `Hello,\n\nYour order for "${book.title}" has been confirmed!\n\nThe seller has been notified and should contact you soon. If they provided their email, you can also reach out to them (Seller Email: ${book.owner?.email || 'N/A'}).\n\nThank you for using BCA Books Marketplace!`
+        text: `Hello,\n\nYour order for "${book.title}" has been confirmed!\n\nThe seller has been notified and should contact you soon. If they provided their email, you can also reach out to them (Seller Email: ${displaySellerEmail}).\n\nThank you for using BCA Books Marketplace!`
       }).catch(err => console.error("Failed to send buyer email", err));
     }
 

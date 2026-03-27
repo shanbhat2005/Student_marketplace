@@ -3,8 +3,20 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const http = require('http');
+const { Server } = require("socket.io");
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*", 
+    methods: ["GET", "POST"]
+  }
+});
+
+// Expose io instance to routes if needed
+app.set("socketio", io);
 
 // Middleware
 app.use(cors());
@@ -45,11 +57,13 @@ const bookRoutes = require('./routes/bookRoutes');
 const authRoutes = require('./routes/authRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 
 app.use('/api/books', bookRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
@@ -58,6 +72,26 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// Socket Event Listeners
+io.on('connection', (socket) => {
+  console.log('A user connected via socket:', socket.id);
+  
+  socket.on('join_room', (roomId) => {
+    socket.join(roomId);
+    console.log(`User joined room: ${roomId}`);
+  });
+
+  socket.on('send_message', (data) => {
+    // Note: the backend handles saving messages via REST, 
+    // but the socket broadcasts immediately for real-time latency.
+    socket.to(data.roomId).emit('receive_message', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
+
+server.listen(PORT, () => {
+  console.log(`Server (HTTP & WS) is running on port ${PORT}`);
 });

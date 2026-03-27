@@ -73,6 +73,55 @@ router.post('/login', async (req, res) => {
     return res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+// --- WISHLIST ROUTES ---
+
+// GET /wishlist/:userId
+router.get('/wishlist/:userId', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).populate('wishlist');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user.wishlist);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// POST /wishlist/add/:bookId
+router.post('/wishlist/add/:bookId', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ message: 'User ID required' });
+    
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    
+    if (!user.wishlist.includes(req.params.bookId)) {
+      user.wishlist.push(req.params.bookId);
+      await user.save();
+    }
+    
+    res.json({ message: 'Added to wishlist', wishlist: user.wishlist });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// DELETE /wishlist/remove/:bookId
+router.delete('/wishlist/remove/:bookId', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ message: 'User ID required' });
+    
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    
+    user.wishlist = user.wishlist.filter(id => id.toString() !== req.params.bookId);
+    await user.save();
+    
+    res.json({ message: 'Removed from wishlist', wishlist: user.wishlist });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 
 module.exports = router;
-

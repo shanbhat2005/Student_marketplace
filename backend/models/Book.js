@@ -30,6 +30,11 @@ const bookSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  contactEmail: {
+    type: String,
+    required: false,
+    trim: true,
+  },
   condition: {
     type: String,
     enum: ['New', 'Used'],
