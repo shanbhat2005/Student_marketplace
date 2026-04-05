@@ -227,16 +227,16 @@ const Chat = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            <form onSubmit={sendMessage} style={{ padding: '1.25rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '1rem', background: 'var(--bg-card)' }}>
+            <form onSubmit={sendMessage} className="chat-form-mobile" style={{ padding: '1.25rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '1rem', background: 'var(--bg-card)' }}>
               <input 
                 type="text" 
                 value={text} 
                 onChange={e => setText(e.target.value)} 
                 placeholder="Type a message..." 
                 className="form-input" 
-                style={{ flex: 1 }}
+                style={{ flex: 1, minWidth: 0 }}
               />
-              <button type="submit" className="primary-btn" disabled={!text.trim()} style={{ padding: '0 2rem' }}>Send</button>
+              <button type="submit" className="primary-btn" disabled={!text.trim()}>Send</button>
             </form>
           </>
         ) : (

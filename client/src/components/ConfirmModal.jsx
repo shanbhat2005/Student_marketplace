@@ -45,7 +45,7 @@ const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel }) => {
           required
         />
 
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
           <button 
             onClick={handleCancel}
             style={{ padding: '0.5rem 1rem', background: '#e5e7eb', color: '#374151', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
