@@ -247,7 +247,7 @@ const Home = () => {
 
               {book.imageUrl ? (
                 <img 
-                  src={`${API_BASE_URL}${book.imageUrl}`} 
+                  src={book.imageUrl.startsWith('data:') ? book.imageUrl : `${API_BASE_URL}${book.imageUrl}`} 
                   alt={book.title} 
                   style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '12px', marginBottom: '0.5rem' }} 
                 />

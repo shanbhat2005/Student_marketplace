@@ -132,3 +132,30 @@
   justify-content: space-between;
   align-items: center;
 }
+
+/* Chat Mobile Responsiveness */
+@media (max-width: 768px) {
+  .chat-sidebar, .chat-main {
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+  }
+  
+  .chat-sidebar.hidden-mobile {
+    display: none !important;
+  }
+  
+  .chat-main.hidden-mobile {
+    display: none !important;
+  }
+  
+  .mobile-back-btn {
+    display: inline-flex !important;
+    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+.mobile-back-btn {
+  display: none; /* hidden on desktop */
+}

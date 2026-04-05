@@ -136,7 +136,7 @@ const Chat = () => {
     <div className="page-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', height: 'calc(100vh - 120px)', paddingTop: '0' }}>
       
       {/* Sidebar: Conversations */}
-      <div className="card" style={{ flex: '1 1 300px', maxWidth: '400px', display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: 0 }}>
+      <div className={`card chat-sidebar ${activeConversation ? 'hidden-mobile' : ''}`} style={{ flex: '1 1 300px', maxWidth: '400px', display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: 0 }}>
         <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
           <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-main)', fontWeight: '800' }}>Messages</h2>
         </div>
@@ -179,10 +179,11 @@ const Chat = () => {
       </div>
 
       {/* Main Chat Area */}
-      <div className="card" style={{ flex: '2 1 500px', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
+      <div className={`card chat-main ${!activeConversation ? 'hidden-mobile' : ''}`} style={{ flex: '2 1 500px', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
         {activeConversation ? (
           <>
             <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--bg-card)' }}>
+              <button className="secondary-btn mobile-back-btn" onClick={() => setActiveConversation(null)}>← Back</button>
               <div>
                 <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.3rem' }}>{getOtherParticipant(activeConversation.participants)?.name}</h3>
                 <p style={{ margin: '0.25rem 0 0 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>Regarding: <span style={{fontWeight: '600', color: 'var(--accent-primary)'}}>{activeConversation.book?.title}</span></p>

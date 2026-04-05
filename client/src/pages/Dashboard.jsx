@@ -179,7 +179,7 @@ const Dashboard = () => {
                   book && book._id && (
                   <div key={book._id} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.25rem' }}>
                      {book.imageUrl ? (
-                        <img src={`${API_BASE_URL}${book.imageUrl}`} alt={book.title} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '12px', marginBottom: '0.5rem' }} />
+                        <img src={book.imageUrl.startsWith('data:') ? book.imageUrl : `${API_BASE_URL}${book.imageUrl}`} alt={book.title} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '12px', marginBottom: '0.5rem' }} />
                       ) : (
                         <div style={{ width: '100%', height: '180px', backgroundColor: 'var(--border-color)', borderRadius: '12px', marginBottom: '0.5rem' }} />
                       )}
