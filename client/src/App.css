@@ -207,6 +207,15 @@
     padding-bottom: 0.5rem;
   }
 
+  /* Body states pushed by components */
+  body.hide-bottom-nav .mobile-bottom-nav {
+    display: none !important;
+  }
+  
+  body.hide-bottom-nav .page-container {
+    padding-bottom: 1.25rem !important; /* Revert the large padding used for nav */
+  }
+
   /* Chat specific */
   .chat-sidebar, .chat-main {
     max-width: 100% !important;

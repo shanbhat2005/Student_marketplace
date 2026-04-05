@@ -95,6 +95,20 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Hide bottom navigation bar cleanly on mobile when viewing an active chat
+  useEffect(() => {
+    if (activeConversation) {
+      document.body.classList.add('hide-bottom-nav');
+    } else {
+      document.body.classList.remove('hide-bottom-nav');
+    }
+    
+    // Cleanup incase user navigates completely away while chat is active
+    return () => {
+      document.body.classList.remove('hide-bottom-nav');
+    };
+  }, [activeConversation]);
+
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() || !activeConversation) return;
