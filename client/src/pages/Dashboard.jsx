@@ -115,7 +115,7 @@ const Dashboard = () => {
         </div>
         
         {/* Tab Navigation */}
-        <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', marginBottom: '2rem', overflowX: 'auto' }}>
+        <div className="dashboard-tabs" style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', marginBottom: '2rem' }}>
           {renderTabButton('orders', 'My Orders')}
           {renderTabButton('wishlist', 'My Wishlist')}
           {renderTabButton('listings', 'My Listed Books')}
@@ -134,7 +134,7 @@ const Dashboard = () => {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {orders.map((order) => (
-                  <div key={order._id} style={{ 
+                  <div key={order._id} className="stack-mobile" style={{ 
                     background: 'var(--input-bg)', padding: '1.5rem', borderRadius: '12px', 
                     border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between',
                     alignItems: 'center', flexWrap: 'wrap', gap: '1rem'
@@ -208,7 +208,7 @@ const Dashboard = () => {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {listedBooks.map((book) => (
-                  <div key={book._id} style={{ 
+                  <div key={book._id} className="stack-mobile" style={{ 
                     background: 'var(--input-bg)', padding: '1.25rem', borderRadius: '12px', 
                     border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between',
                     alignItems: 'center', flexWrap: 'wrap', gap: '1rem'

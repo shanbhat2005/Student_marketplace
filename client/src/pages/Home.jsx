@@ -174,7 +174,7 @@ const Home = () => {
 
   return (
     <div className="page-container">
-      <div className="flex-between" style={{ marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="flex-between stack-mobile" style={{ marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ margin: '0 0 0.5rem', color: 'var(--text-main)', fontSize: '2.2rem', fontWeight: '800' }}>Marketplace</h1>
           <p className="text-muted" style={{ margin: 0, fontSize: '1.05rem' }}>

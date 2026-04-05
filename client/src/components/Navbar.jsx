@@ -92,9 +92,11 @@ const Navbar = () => {
         </h2>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <Link to="/home" style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: '600', fontSize: '1.05rem' }}>Dashboard</Link>
-          <Link to="/add-book" style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: '600', fontSize: '1.05rem' }}>Sell Book</Link>
-          <Link to="/chat" style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: '600', fontSize: '1.05rem' }}>Messages</Link>
+          <div className="desktop-nav-links">
+            <Link to="/home" style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: '600', fontSize: '1.05rem' }}>Dashboard</Link>
+            <Link to="/add-book" style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: '600', fontSize: '1.05rem' }}>Sell Book</Link>
+            <Link to="/chat" style={{ color: 'var(--text-main)', textDecoration: 'none', fontWeight: '600', fontSize: '1.05rem' }}>Messages</Link>
+          </div>
           
           {/* Theme Toggle */}
           <button 
@@ -203,6 +205,26 @@ const Navbar = () => {
              {user.name && user.name.charAt(0).toUpperCase()}
           </Link>
         </div>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="mobile-bottom-nav">
+        <Link to="/home" className={`mobile-nav-item ${location.pathname === '/home' ? 'active' : ''}`}>
+          <span>🏠</span>
+          Home
+        </Link>
+        <Link to="/add-book" className={`mobile-nav-item ${location.pathname === '/add-book' ? 'active' : ''}`}>
+          <span>➕</span>
+          Sell
+        </Link>
+        <Link to="/chat" className={`mobile-nav-item ${location.pathname === '/chat' ? 'active' : ''}`}>
+          <span>💬</span>
+          Messages
+        </Link>
+        <Link to="/dashboard" className={`mobile-nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
+          <span>👤</span>
+          Profile
+        </Link>
       </div>
     </div>
   );

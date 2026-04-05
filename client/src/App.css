@@ -127,14 +127,87 @@
 .full-width {
   width: 100%;
 }
+/* Mobile Navigation Setup */
+.mobile-bottom-nav {
+  display: none;
+}
+.desktop-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Base Utility Classes */
 .flex-between {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* Chat Mobile Responsiveness */
+/* Chat & General Mobile Responsiveness */
 @media (max-width: 768px) {
+  .page-container {
+    padding: 1.25rem 1rem 6rem 1rem; /* 6rem bottom gives room for the bottom nav */
+  }
+  
+  .desktop-nav-links {
+    display: none !important;
+  }
+  
+  .mobile-bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    padding: 0.8rem 1rem calc(0.8rem + env(safe-area-inset-bottom));
+    z-index: 1000;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  
+  .mobile-nav-item.active {
+    color: var(--accent-primary);
+  }
+  
+  .mobile-nav-item span {
+    font-size: 1.4rem;
+  }
+
+  .stack-mobile {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+  
+  .stack-mobile > div {
+    width: 100% !important;
+    text-align: left;
+  }
+  
+  .dashboard-tabs {
+    white-space: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Chat specific */
   .chat-sidebar, .chat-main {
     max-width: 100% !important;
     flex: 1 1 100% !important;

@@ -107,7 +107,7 @@ const AddBook = () => {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div className="stack-mobile" style={{ display: 'flex', gap: '1rem' }}>
             <div className="form-group" style={{ flex: 1 }}>
               <label className="form-label">Course</label>
               <select
@@ -141,7 +141,7 @@ const AddBook = () => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div className="stack-mobile" style={{ display: 'flex', gap: '1rem' }}>
             <div className="form-group" style={{ flex: 1 }}>
               <label className="form-label">Condition</label>
               <select
