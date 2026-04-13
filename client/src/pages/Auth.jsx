@@ -106,6 +106,7 @@ const Auth = () => {
     <div className="auth-wrapper">
       <div className="auth-container">
         <div className="auth-header">
+          <img src="/logo.png" alt="College Logo" style={{ height: '60px', objectFit: 'contain', marginBottom: '1rem', display: 'block', margin: '0 auto 1rem auto' }} />
           <h1 className="auth-title">Welcome Back</h1>
           <p className="auth-subtitle">Welcome Back, Please enter Your details</p>
         </div>

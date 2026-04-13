@@ -38,8 +38,11 @@ const Signup = () => {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          <img src="/logo.png" alt="College Logo" style={{ height: '50px', objectFit: 'contain' }} />
+        </div>
         <h2>Create an Account</h2>
-        <p className="auth-subtitle">Join the BCA Second-Hand Books Marketplace</p>
+        <p className="auth-subtitle">Join the College Cart</p>
         <form onSubmit={handleSubmit} className="auth-form">
           <label>
             Name

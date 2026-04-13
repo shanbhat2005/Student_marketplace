@@ -38,8 +38,11 @@ const Login = () => {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          <img src="/logo.png" alt="College Logo" style={{ height: '50px', objectFit: 'contain' }} />
+        </div>
         <h2>Login</h2>
-        <p className="auth-subtitle">Welcome back to the BCA Books Marketplace</p>
+        <p className="auth-subtitle">Welcome back to the College Cart</p>
         <form onSubmit={handleSubmit} className="auth-form">
           <label>
             Email

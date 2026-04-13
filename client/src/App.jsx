@@ -13,9 +13,10 @@ const LandingPage = () => {
   return (
     <div className="auth-wrapper">
       <div className="auth-container" style={{ textAlign: 'center', padding: '3.5rem 2.5rem' }}>
-        <h1 className="auth-title" style={{ fontSize: '2.2rem', marginBottom: '1rem' }}>BCA Marketplace</h1>
+        <img src="/logo.png" alt="College Logo" style={{ height: '80px', objectFit: 'contain', marginBottom: '1rem' }} />
+        <h1 className="auth-title" style={{ fontSize: '2.2rem', marginBottom: '1rem' }}>College Cart</h1>
         <p className="auth-subtitle" style={{ marginBottom: '2.5rem', lineHeight: '1.6' }}>
-          Buy and sell BCA semester books easily with your classmates.
+          Buy and sell semester books easily with your classmates.
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <Link to="/auth" className="continue-btn" style={{ textDecoration: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

@@ -17,7 +17,7 @@ console.log(`Connecting to Gmail as ${process.env.EMAIL_USER}...`);
 transporter.sendMail({
   from: process.env.EMAIL_USER,
   to: process.env.EMAIL_USER, // Send to yourself
-  subject: 'Test Email from BCA Marketplace',
+  subject: 'Test Email from College Cart',
   text: 'If you see this, Nodemailer is working!'
 })
 .then(info => console.log('SUCCESS: Email sent!', info.response))

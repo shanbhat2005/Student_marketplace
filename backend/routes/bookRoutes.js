@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/Book');
@@ -148,22 +149,22 @@ router.post('/:id/buy', async (req, res) => {
         // Send actual email to seller
         const notifyEmail = book.contactEmail || book.owner.email;
         if (notifyEmail) {
-          await transporter.sendMail({
+          transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: notifyEmail,
             subject: '📚 Your book has been sold!',
-            text: `Great news!\n\nSomeone just purchased your listed book: "${book.title}".\n\nPlease contact the buyer at ${buyerEmail} to arrange the delivery and payment.\n\nThank you for using BCA Books Marketplace!`
+            text: `Great news!\n\nSomeone just purchased your listed book: "${book.title}".\n\nPlease contact the buyer at ${buyerEmail} to arrange the delivery and payment.\n\nThank you for using College Cart!`
           }).catch(err => console.error("Failed to send seller email", err));
         }
       }
       
       // Send actual email to buyer
       const displaySellerEmail = book.contactEmail || (book.owner ? book.owner.email : 'N/A');
-      await transporter.sendMail({
+      transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: buyerEmail,
         subject: '📚 Purchase Confirmation',
-        text: `Hello,\n\nYour order for "${book.title}" has been confirmed!\n\nThe seller has been notified and should contact you soon. If they provided their email, you can also reach out to them (Seller Email: ${displaySellerEmail}).\n\nThank you for using BCA Books Marketplace!`
+        text: `Hello,\n\nYour order for "${book.title}" has been confirmed!\n\nThe seller has been notified and should contact you soon. If they provided their email, you can also reach out to them (Seller Email: ${displaySellerEmail}).\n\nThank you for using College Cart!`
       }).catch(err => console.error("Failed to send buyer email", err));
     }
 
