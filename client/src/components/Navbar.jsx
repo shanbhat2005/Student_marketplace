@@ -91,11 +91,6 @@ const Navbar = () => {
           textDecoration: 'none'
         }}>
           <img src="/logo.png" alt="College Logo" style={{ height: '40px', objectFit: 'contain' }} />
-          <span style={{
-            background: 'var(--accent-gradient)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>College.</span>
         </h2>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
